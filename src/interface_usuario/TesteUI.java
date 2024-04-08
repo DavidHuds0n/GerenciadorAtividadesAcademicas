@@ -36,6 +36,7 @@ public class TesteUI {
                     break;
                 case 4:
                     System.out.println("Saindo...");
+                    scanner.close();
                     System.exit(0);
                 default:
                     System.out.println("Opção inválida!");
