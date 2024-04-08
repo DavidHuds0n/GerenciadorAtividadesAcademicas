@@ -15,10 +15,14 @@ public class Aluno extends Usuario {
 
     // Método para adicionar uma disciplina em que o aluno está matriculado
     public void adicionarDisciplinaMatriculada(Disciplina disciplina) {
-        if (disciplina == null) {
-            throw new IllegalArgumentException("Disciplina inválida.");
+        try {
+            if (disciplina == null) {
+                throw new IllegalArgumentException("Disciplina nula é inválida.");
+            }
+            disciplinasMatriculadas.add(disciplina);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao adicionar disciplina: " + e.getMessage());
         }
-        disciplinasMatriculadas.add(disciplina);
     }
 
     // Método para acessar todas as disciplinas em que o aluno está matriculado
@@ -28,25 +32,40 @@ public class Aluno extends Usuario {
 
     // Método para consultar as atividades da disciplina
     public List<String> consultarAtividades(Disciplina disciplina) {
-        if (disciplina == null) {
-            throw new IllegalArgumentException("Disciplina inválida.");
+        try {
+            if (disciplina == null) {
+                throw new IllegalArgumentException("Disciplina nula é inválida.");
+            }
+            return new ArrayList<>(disciplina.getAtividades().keySet());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao consultar atividades: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return new ArrayList<>(disciplina.getAtividades().keySet());
     }
 
     // Método para consultar data de provas
     public LocalDate consultarDatasProvas(Disciplina disciplina) {
-        if (disciplina == null) {
-            throw new IllegalArgumentException("Disciplina inválida.");
+        try {
+            if (disciplina == null) {
+                throw new IllegalArgumentException("Disciplina nula é inválida.");
+            }
+            return disciplina.getDatasProvas();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao consultar datas de provas: " + e.getMessage());
+            return null;
         }
-        return disciplina.getDatasProvas();
     } 
 
     // Método para consultar a nota da disciplina:
     public Double consultarNota(Disciplina disciplina) {
-        if (disciplina == null) {
-            throw new IllegalArgumentException("Disciplina inválida.");
+        try {
+            if (disciplina == null) {
+                throw new IllegalArgumentException("Disciplina nula é inválida.");
+            }
+            return disciplina.getNota(this);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao consultar nota: " + e.getMessage());
+            return null;
         }
-        return disciplina.getNota(this);
     }
 }

@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import negocios.*;
+import negocios.Aluno;
+import negocios.Professor;
 
 public class Disciplina {
     private String nome;
@@ -24,7 +25,7 @@ public class Disciplina {
         this.notasAlunos = new HashMap<>();
     }
 
-    // Get e Set para nome
+    // Getters e Setters para nome
     public String getNome() {
         return nome;
     }
@@ -33,7 +34,7 @@ public class Disciplina {
         this.nome = nome;
     }
 
-    // Get e Set para código
+    // Getters e Setters para código
     public String getCodigo() {
         return codigo;
     }
@@ -42,7 +43,7 @@ public class Disciplina {
         this.codigo = codigo;
     }
 
-    // Get e Set para professorResponsavel
+    // Getters e Setters para professorResponsavel
     public Professor getProfessorResponsavel() {
         return professorResponsavel;
     }
@@ -50,15 +51,28 @@ public class Disciplina {
     public void setProfessorResponsavel(Professor professorResponsavel) {
         this.professorResponsavel = professorResponsavel;
     }
+    
+    // Método para retornar as atividades da disciplina
+    public HashMap<String, LocalDate> getAtividades() {
+        return this.atividades;
+    }
 
+    // Método para retornar as datas de provas da disciplina
+    public LocalDate getDatasProvas() {
+        return this.dataProva;
+    }
+    
+    // Método para retornar os alunos matriculados na disciplina
+    public List<Aluno> getAlunosMatriculados() {
+        return this.alunosMatriculados;
+    }
+    
     // Método para adicionar aluno
     public void adicionarAluno(Aluno aluno) {
         if (aluno == null) {
             throw new IllegalArgumentException("O aluno não pode ser nulo.");
         }
         this.alunosMatriculados.add(aluno);
-        // provavelmente desnecessário:
-        //this.notasAlunos.put(aluno, new ArrayList<>()); // Inicializa a lista de notas para o aluno
     }
 
     // Método para remover aluno
@@ -88,37 +102,33 @@ public class Disciplina {
 
     // Método para inserir notas
     public void inserirNota(Aluno aluno, Double nota) {
-        if (aluno == null || nota == null) {
-            throw new IllegalArgumentException("Aluno ou nota não podem ser nulos.");
+        try {
+            if (aluno == null || nota == null) {
+                throw new IllegalArgumentException("Aluno ou nota não podem ser nulos.");
+            }
+            if (!this.alunosMatriculados.contains(aluno)) {
+                throw new IllegalArgumentException("O aluno não está matriculado nesta disciplina.");
+            }
+            this.notasAlunos.put(aluno, nota); // Adiciona a nota ao final da lista de notas do aluno
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao inserir nota: " + e.getMessage());
         }
-        if (!this.alunosMatriculados.contains(aluno)) {
-            throw new IllegalArgumentException("O aluno não está matriculado nesta disciplina.");
-        }
-        this.notasAlunos.put(aluno, nota); // Adiciona a nota ao final da lista de notas do aluno
     }
 
     // Método para consultar nota de um aluno
     public Double getNota(Aluno aluno) {
-        if (aluno == null) {
-            throw new IllegalArgumentException("Aluno não pode ser nulo.");
+        try {
+            if (aluno == null) {
+                throw new IllegalArgumentException("Aluno não pode ser nulo.");
+            }
+            if (!this.notasAlunos.containsKey(aluno)) {
+                throw new IllegalArgumentException("O aluno não possui notas registradas nesta disciplina.");
+            }
+            return this.notasAlunos.get(aluno);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro ao consultar nota: " + e.getMessage());
+            return null;
         }
-        if (!this.notasAlunos.containsKey(aluno)) {
-            throw new IllegalArgumentException("O aluno não possui notas registradas nesta disciplina.");
-        }
-        return this.notasAlunos.get(aluno);
-    }
-    
-    // Método para retornar as atividades da disciplina
-    public HashMap<String, LocalDate> getAtividades() {
-        return this.atividades;
     }
 
-    // Método para retornar as datas de provas da disciplina
-    public LocalDate getDatasProvas() {
-        return this.dataProva;
-    }
-    
-    public List<Aluno> getAlunosMatriculados() {
-        return this.alunosMatriculados;
-    }
 }
